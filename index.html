@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Kuis Kemerdekaan Indonesia</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+            
+            body {
+                font-family: 'Montserrat', sans-serif;
+                background-color: #f8f9fa;
+                color: #333;
+            }
+            
+            .hero-section {
+                position: relative;
+                height: 300px;
+            }
+            .hero-section img {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Memastikan gambar memenuhi area */
+                opacity: 1; /* Pastikan opacity diatur ke 1 */
+            }
+    
+            .text-center h1, .text-center p {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Tambahkan bayangan pada teks */
+            }
+        </style>
+    </head>
+
+<body>
+    <div class="hero-section flex items-center justify-center relative">
+    <img src="https://i.imghippo.com/files/ubYl2041NQ.jpg" alt="Bendera Merah Putih" class="absolute inset-0 w-full h-full object-cover opacity-1">
+    <div class="text-center text-white px-4 relative z-10">
+        <div class="bg-black bg-opacity-50 p-4 rounded">
+            <h1 class="text-4xl font-bold mb-4">KUIS KEMERDEKAAN INDONESIA</h1>
+            <p class="text-xl">Uji pengetahuan Anda tentang sejarah perjuangan bangsa!</p>
+        </div>
+    </div>
+</div>
+
+    
+    
+    <div class="red-white-stripe w-full"></div>
+    
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div id="start-screen" class="bg-white rounded-lg shadow-lg p-6 text-center">
+            <img src="https://i.imghippo.com/files/ewNl3754.jpg" alt="Sekelompok pejuang kemerdekaan Indonesia sedang berdiskusi dengan latar belakang bendera merah putih berkibar" class="mx-auto mb-6 rounded-lg shadow-md">
+            
+            <h2 class="text-2xl font-bold mb-4">Selamat Datang di Kuis Kemerdekaan Indonesia</h2>
+            <p class="mb-6">Kuis ini terdiri dari 25 pertanyaan seputar sejarah kemerdekaan Indonesia. Test pengetahuan Anda dan pelajari fakta menarik tentang perjuangan bangsa kita!</p>
+            
+            <div class="mb-6 p-4 bg-gray-100 rounded-lg">
+                <h3 class="font-bold mb-2">Aturan Main:</h3>
+                <ul class="text-left list-disc pl-5 space-y-1">
+                    <li>Setiap soal memiliki 4 pilihan jawaban</li>
+                    <li>Waktu menjawab tidak dibatasi</li>
+                    <li>Setiap jawaban benar bernilai 4 poin (total maksimal 100 poin)</li>
+                    <li>Hasil akan ditunjukkan di akhir kuis</li>
+                </ul>
+            </div>
+            
+            <button id="start-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 transform hover:scale-105">
+                MULAI KUIS
+            </button>
+        </div>
+        
+        <div id="quiz-container" class="hidden bg-white rounded-lg shadow-lg p-6">
+            <div class="flex justify-between items-center mb-6">
+                <div id="question-counter" class="question-counter bg-red-600 text-white flex items-center justify-center">
+                    <span id="current-question">1</span>
+                </div>
+                <div class="flex-1 ml-4">
+                    <div class="flex justify-between mb-1">
+                        <span>Progress</span>
+                        <span id="progress-text">1/25</span>
+                    </div>
+                    <div class="progress-bar-container bg-gray-200 rounded-full h-2.5">
+                        <div id="progress-bar" class="progress-bar bg-red-600 h-2.5 rounded-full" style="width: 4%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="timer-container" class="hidden mb-4">
+                <div class="text-center mb-2">Waktu Tersisa:</div>
+                <div class="flex justify-center">
+                    <div class="text-xl font-mono bg-gray-100 px-4 py-2 rounded-lg">02:00</div>
+                </div>
+            </div>
+            
+            <h2 id="question-text" class="text-xl font-bold mb-6"></h2>
+            
+            <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <!-- Options will be inserted here -->
+            </div>
+            
+            <div class="flex justify-between mt-6">
+                <button id="prev-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded shadow-md transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    Sebelumnya
+                </button>
+                <button id="next-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow-md transition duration-300">
+                    Selanjutnya
+                </button>
+            </div>
+        </div>
+        
+        <div id="results-container" class="hidden bg-white rounded-lg shadow-lg p-6 text-center">
+            <img src="https://i.imghippo.com/files/miaR3155lc.jpg" alt="Bendera merah putih berkibar dengan latar belakang langit biru cerah dalam perayaan hari kemerdekaan Indonesia" class="mx-auto mb-6 rounded-lg shadow-md">
+            
+            <h2 class="text-2xl font-bold mb-4">Hasil Kuis Kemerdekaan Indonesia</h2>
+            
+            <div class="flex justify-center mb-8">
+                <div class="w-40 h-40 rounded-full border-4 border-red-600 flex items-center justify-center">
+                    <span id="score" class="text-4xl font-bold">0</span>
+                    <span class="text-2xl">/100</span>
+                </div>
+            </div>
+            
+            <p id="result-message" class="text-lg mb-6"></p>
+            
+            <div class="mb-6">
+                <h3 class="font-bold mb-2">Pahlawan Nasional untuk Dikenang:</h3>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="pahlawan-card bg-gray-100 p-3 rounded-lg shadow-sm">
+                        <img src="https://i.imghippo.com/files/rhhC9294TZQ.jpg" alt="Potret resmi Soekarno mengenakan peci dengan ekspresi tegas sebagai proklamator kemerdekaan Indonesia" class="w-16 h-16 mx-auto rounded-full mb-2">
+                        <div class="text-sm">Ir. Soekarno</div>
+                    </div>
+                    <div class="pahlawan-card bg-gray-100 p-3 rounded-lg shadow-sm">
+                        <img src="https://i.imghippo.com/files/poWT4076di.jpg" alt="Potret resmi Mohammad Hatta dengan kacamata sebagai wakil proklamator kemerdekaan Indonesia" class="w-16 h-16 mx-auto rounded-full mb-2">
+                        <div class="text-sm">Mohammad Hatta</div>
+                    </div>
+                    <div class="pahlawan-card bg-gray-100 p-3 rounded-lg shadow-sm">
+                        <img src="https://i.imghippo.com/files/Fef3785gI.jpg" alt="Potret Kartini mengenakan kebaya modern sebagai pelopor emansipasi wanita Indonesia" class="w-16 h-16 mx-auto rounded-full mb-2">
+                        <div class="text-sm">R.A. Kartini</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="restart-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300">
+                Main Lagi
+            </button>
+        </div>
+    </div>
+    
+    <div class="red-white-stripe w-full mt-8"></div>
+    
+    <div class="celebration" id="celebration"></div>
+    
+    <script>
+        // Questions about Indonesian independence history
+        const questions = [
+            {
+                question: "Pada tanggal berapa Proklamasi Kemerdekaan Indonesia dibacakan?",
+                options: [
+                    "17 Agustus 1944",
+                    "17 Agustus 1945",
+                    "17 Agustus 1946",
+                    "17 Agustus 1947"
+                ],
+                answer: 1
+            },
+            {
+                question: "Siapa yang membacakan teks Proklamasi Kemerdekaan Indonesia?",
+                options: [
+                    "Mohammad Hatta",
+                    "Soekarno",
+                    "Sutan Sjahrir",
+                    "Achmad Soebardjo"
+                ],
+                answer: 1
+            },
+            {
+                question: "Di mana teks Proklamasi Kemerdekaan Indonesia dibacakan?",
+                options: [
+                    "Istana Negara",
+                    "Jalan Pegangsaan Timur No. 56",
+                    "Gedung Pancasila",
+                    "Lapangan Ikada"
+                ],
+                answer: 1
+            },
+            {
+                question: "Siapa yang mengetik naskah teks Proklamasi?",
+                options: [
+                    "Sayuti Melik",
+                    "Latief Hendraningrat",
+                    "Sukarni",
+                    "B.M. Diah"
+                ],
+                answer: 0
+            },
+            {
+                question: "Apa nama organisasi persiapan kemerdekaan yang dibentuk Jepang?",
+                options: [
+                    "Putera",
+                    "BPUPKI",
+                    "PETA",
+                    "Heiho"
+                ],
+                answer: 1
+            },
+            {
+                question: "Kapan BPUPKI dibentuk?",
+                options: [
+                    "1 Maret 1945",
+                    "29 April 1945",
+                    "7 Agustus 1945",
+                    "9 Agustus 1945"
+                ],
+                answer: 1
+            },
+            {
+                question: "Apa kepanjangan dari PPKI?",
+                options: [
+                    "Panitia Persiapan Kemerdekaan Indonesia",
+                    "Panitia Pembela Kebenaran Indonesia",
+                    "Panitia Pembentukan Kemerdekaan Indonesia",
+                    "Panitia Penyelenggara Kemerdekaan Indonesia"
+                ],
+                answer: 0
+            },
+            {
+                question: "Siapa yang merancang bendera merah putih pertama?",
+                options: [
+                    "Fatmawati",
+                    "Soekarno",
+                    "Mohammad Hatta",
+                    "Ibu Inggit Garnasih"
+                ],
+                answer: 0
+            },
+            {
+                question: "Teks Proklamasi ditandatangani atas nama bangsa Indonesia oleh...",
+                options: [
+                    "Soekarno dan Mohammad Hatta",
+                    "Soekarno dan Achmad Soebardjo",
+                    "Mohammad Hatta dan Sutan Sjahrir",
+                    "Soekarno dan Latief Hendraningrat"
+                ],
+                answer: 0
+            },
+            {
+                question: "Apa nama pemuda yang meminta Soekarno-Hatta untuk segera memproklamasikan kemerdekaan?",
+                options: [
+                    "Chairul Saleh",
+                    "Adam Malik",
+                    "Sutan Sjahrir",
+                    "Wikana"
+                ],
+                answer: 3
+            },
+            {
+                question: "Peristiwa Rengasdengklok terjadi karena...",
+                options: [
+                    "Para pemuda ingin segera memproklamasikan kemerdekaan",
+                    "Pasukan Jepang akan melucuti tentara Indonesia",
+                    "Sekutu telah mendarat di Indonesia",
+                    "Belanda ingin kembali menjajah Indonesia"
+                ],
+                answer: 0
+            },
+            {
+                question: "Kapan Jepang menyerah tanpa syarat kepada Sekutu?",
+                options: [
+                    "6 Agustus 1945",
+                    "9 Agustus 1945",
+                    "14 Agustus 1945",
+                    "15 Agustus 1945"
+                ],
+                answer: 2
+            },
+            {
+                question: "Siapa yang menyusun konsep pertama teks Proklamasi?",
+                options: [
+                    "Soekarno dan Mohammad Hatta",
+                    "Achmad Soebardjo",
+                    "Sutan Sjahrir",
+                    "Wikana dan Chaerul Saleh"
+                ],
+                answer: 0
+            },
+            {
+                question: "Di mana naskah asli Proklamasi disimpan?",
+                options: [
+                    "Museum Nasional",
+                    "Arsip Nasional RI",
+                    "Istana Merdeka",
+                    "Gedung Konstituante"
+                ],
+                answer: 1
+            },
+            {
+                question: "Siapa yang pertama kali mendengar berita proklamasi dari radio?",
+                options: [
+                    "Yusuf Ronodipuro",
+                    "B.M. Diah",
+                    "Suryadi Suryadarma",
+                    "Abdul Harris Nasution"
+                ],
+                answer: 0
+            },
+            {
+                question: "Upacara pengibaran bendera pertama dilakukan oleh...",
+                options: [
+                    "Latief Hendraningrat dan Suhud",
+                    "Sayuti Melik dan B.M. Diah",
+                    "Wikana dan Chaerul Saleh",
+                    "Sukarni dan Adam Malik"
+                ],
+                answer: 0
+            },
+            {
+                question: "Apa yang menjadi dasar hukum Proklamasi Kemerdekaan Indonesia?",
+                options: [
+                    "Piagam Jakarta",
+                    "Pembukaan UUD 1945",
+                    "Teks Proklamasi itu sendiri",
+                    "Kapitulasi Jepang"
+                ],
+                answer: 2
+            },
+            {
+                question: "Kapan sidang pertama PPKI dilaksanakan?",
+                options: [
+                    "16 Agustus 1945",
+                    "17 Agustus 1945",
+                    "18 Agustus 1945",
+                    "19 Agustus 1945"
+                ],
+                answer: 2
+            },
+            {
+                question: "Apa hasil utama sidang PPKI pertama?",
+                options: [
+                    "Mengesahkan UUD 1945",
+                    "Menetapkan Presiden dan Wakil Presiden",
+                    "Membentuk BKR",
+                    "Semua jawaban benar"
+                ],
+                answer: 3
+            },
+            {
+                question: "Siapakah yang menjahit bendera Indonesia pertama?",
+                options: [
+                    "Fatmawati",
+                    "Kartini",
+                    "Dewi Sartika",
+                    "Cut Nyak Dien"
+                ],
+                answer: 0
+            },
+            {
+                question: "Kapan Indonesia pertama kali diakui kedaulatannya oleh Belanda?",
+                options: [
+                    "1947",
+                    "1949",
+                    "1950",
+                    "1956"
+                ],
+                answer: 1
+            },
+            {
+                question: "Konferensi apa yang menghasilkan pengakuan kedaulatan Indonesia oleh Belanda?",
+                options: [
+                    "Konferensi Meja Bundar",
+                    "Konferensi Asia Afrika",
+                    "Konferensi Malino",
+                    "Konferensi Linggarjati"
+                ],
+                answer: 0
+            },
+            {
+                question: "Perjanjian Renville ditandatangani pada tahun...",
+                options: [
+                    "1947",
+                    "1948",
+                    "1949",
+                    "1950"
+                ],
+                answer: 1
+            },
+            {
+                question: "Apa nama ibukota Indonesia saat Proklamasi?",
+                options: [
+                    "Jakarta",
+                    "Yogyakarta",
+                    "Bandung",
+                    "Surabaya"
+                ],
+                answer: 0
+            },
+            {
+                question: "Kapan Belanda akhirnya mengakui kemerdekaan Indonesia secara penuh?",
+                options: [
+                    "17 Agustus 1945",
+                    "27 Desember 1949",
+                    "17 Agustus 1950",
+                    "15 Agustus 1962"
+                ],
+                answer: 1
+            }
+        ];
+        
+        // Quiz variables
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = new Array(questions.length).fill(-1);
+        
+        // DOM elements
+        const startScreen = document.getElementById('start-screen');
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const startBtn = document.getElementById('start-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const questionCounter = document.getElementById('current-question');
+        const progressText = document.getElementById('progress-text');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreElement = document.getElementById('score');
+        const resultMessage = document.getElementById('result-message');
+        const celebration = document.getElementById('celebration');
+        
+        // Event listeners
+        startBtn.addEventListener('click', startQuiz);
+        prevBtn.addEventListener('click', prevQuestion);
+        nextBtn.addEventListener('click', nextQuestion);
+        restartBtn.addEventListener('click', restartQuiz);
+        
+        // Start the quiz
+        function startQuiz() {
+            startScreen.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            loadQuestion();
+        }
+        
+        // Load a question
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            questionText.textContent = question.question;
+            questionCounter.textContent = currentQuestion + 1;
+            
+            // Update progress
+            progressText.textContent = `${currentQuestion + 1}/${questions.length}`;
+            progressBar.style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+            
+            // Clear previous options
+            optionsContainer.innerHTML = '';
+            
+            // Create new options
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('button');
+                optionElement.className = `option bg-white border border-gray-300 rounded-lg p-4 text-left shadow-sm transition duration-300 ${userAnswers[currentQuestion] === index ? 'bg-red-100 border-red-400' : ''}`;
+                optionElement.textContent = option;
+                
+                optionElement.addEventListener('click', () => {
+                    // Remove selected class from all options
+                    document.querySelectorAll('.option').forEach(opt => {
+                        opt.classList.remove('bg-red-100', 'border-red-400');
+                    });
+                    
+                    // Add selected class to clicked option
+                    optionElement.classList.add('bg-red-100', 'border-red-400');
+                    
+                    // Save user answer
+                    userAnswers[currentQuestion] = index;
+                    
+                    // Enable next button
+                    nextBtn.disabled = false;
+                });
+                
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Enable/disable navigation buttons
+            prevBtn.disabled = currentQuestion === 0;
+            nextBtn.textContent = currentQuestion === questions.length - 1 ? 'Lihat Hasil' : 'Selanjutnya';
+            nextBtn.disabled = userAnswers[currentQuestion] === -1;
+        }
+        
+        // Previous question
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+        
+        // Next question or show results
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+                nextBtn.disabled = userAnswers[currentQuestion] === -1;
+            } else {
+                showResults();
+            }
+        }
+        
+        // Show quiz results
+        function showResults() {
+            // Calculate score
+            score = 0;
+            for (let i = 0; i < questions.length; i++) {
+                if (userAnswers[i] === questions[i].answer) {
+                    score += 4; // Each correct answer worth 4 points (total 100)
+                }
+            }
+            
+            // Display results
+            quizContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            scoreElement.textContent = score;
+            
+            // Set result message
+            if (score >= 90) {
+                resultMessage.textContent = "Luar biasa! Anda benar-benar menguasai sejarah kemerdekaan Indonesia.";
+                startCelebration();
+            } else if (score >= 70) {
+                resultMessage.textContent = "Bagus! Pengetahuan Anda tentang sejarah kemerdekaan cukup baik.";
+            } else if (score >= 50) {
+                resultMessage.textContent = "Cukup baik! Masih ada beberapa hal yang bisa dipelajari lebih lanjut.";
+            } else {
+                resultMessage.textContent = "Anda bisa belajar lebih banyak tentang sejarah kemerdekaan Indonesia.";
+            }
+        }
+        
+        // Start celebration animation
+        function startCelebration() {
+            celebration.style.display = 'block';
+            
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = `${Math.random() * 100}%`;
+                    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                    confetti.style.animationDuration = `${3 + Math.random() * 3}s`;
+                    celebration.appendChild(confetti);
+                    
+                    // Remove confetti after animation
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 50);
+            }
+            
+            setTimeout(() => {
+                celebration.style.display = 'none';
+                celebration.innerHTML = '';
+            }, 5000);
+        }
+        
+        // Restart the quiz
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            userAnswers = new Array(questions.length).fill(-1);
+            
+            resultsContainer.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
